@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Flight, Reservation, Passenger
+from .models import Flight,Reservation, Passenger
 
 
 class FlightSerializer(serializers.ModelSerializer):
@@ -16,34 +16,26 @@ class FlightSerializer(serializers.ModelSerializer):
             "etd"
         )
         
-
-
+        
 class PassengerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Passenger
         fields = "__all__"
-
-
-
+  
 
 class ReservationSerializer(serializers.ModelSerializer):
-  user = serializers.StringRelatedField()
-  flight = serializers.StringRelatedField()
-  passenger = PassengerSerializer(many=True)
-  flight = serializers.StringRelatedField()
-  flight_id = serializers.IntegerField()
-  user = serializers.StringRelatedField()
-  class Meta:
-    model = Reservation
-    fields = (
-        "user",
-        "flight",
-        "flight_id",
-        "passenger",
-        "user"
-    )
+
+    passenger = PassengerSerializer(many=True, required=True)
+    flight = serializers.StringRelatedField()
+    flight_id = serializers.IntegerField()
+    user = serializers.StringRelatedField()
     
+    class Meta:
+        model = Reservation
+        fields = ("id", "flight", "flight_id", "user", "passenger")
+        
+        
     def create(self, validated_data):
         passenger_data = validated_data.pop("passenger")
         validated_data["user_id"] = self.context["request"].user.id
@@ -56,4 +48,25 @@ class ReservationSerializer(serializers.ModelSerializer):
         reservation.save()
         return reservation
             
-            
+        
+        
+class StaffFlightSerializer(serializers.ModelSerializer):
+    
+    reservation = ReservationSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Flight
+        fields = (
+            "id",
+            "flight_number",
+            "operation_airlines",
+            "departure_city",
+            "arrival_city",
+            "date_of_departure",
+            "etd",
+            "reservation",
+        )
+        
+        
+    
+    
