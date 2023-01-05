@@ -40,14 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     #? my apps
-    
+    'users',
+    'flight',
     #? trirdpart apps
     'rest_framework', #! buraya ekle
     'drf_yasg',  #! buraya ekle   
     # 'debug_toolbar',  #! buraya ekle,
     'rest_framework.authtoken',
     'dj_rest_auth',
-    'users',
+
 ]
 
 MIDDLEWARE = [
